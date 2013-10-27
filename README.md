@@ -6,17 +6,8 @@ Cocos2d-x color and texture transform effect extension.
 
 功能
 -------------------
-   * 支持Flash的经典插值(Motion)动画
-   * 支持Flash的引导层动画(通过JSFL进行转换为关键帧实现)
-   * 支持Flash的所有Color Effect
-   * 支持MovieClip和Graphics的2D矩阵变换(缩放，旋转，切变，偏移，锚点)
-   * 自动将MovieClip的原点每帧更新为CCNode的AnchorPoint坐标
-   * 自动更新每帧的BoundingBox
-   * 播放动画操作实现为Action类
-   * 通过缓存提高加载和动画计算的速度
-   * 支持Flash中MovieClip的嵌套
-   * 支持Graphics的所有循环播放模式
-   * 支持自定义动画事件
+   * 精灵的显示颜色取反，原色缩放，原色偏移，亮度，饱和度，对比度，阈值，色相偏移动画
+   * 精灵的纹理坐标偏移，旋转，缩放，切变动画
 
 
 依赖

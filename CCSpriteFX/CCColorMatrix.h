@@ -32,7 +32,7 @@ typedef union _ColorMatrix4x4 {
 } ColorMatrix4x4;
 
 CC_DLL ColorMatrix4x4 CCColorMatrixMakeIdentity ();
-CC_DLL ColorMatrix4x4 CCColorMatrixMakeInversion (); // 反色
+CC_DLL ColorMatrix4x4 CCColorMatrixMakeInversion (); // color inversion
 CC_DLL ColorMatrix4x4 CCColorMatrixMakeScale (float rn, float gn, float bn); // param is 0~1
 CC_DLL ColorMatrix4x4 CCColorMatrixMakeOffset (float rn, float gn, float bn); // param is -1~1
 CC_DLL ColorMatrix4x4 CCColorMatrixMakeBrightness (float n); // param is -1~1
