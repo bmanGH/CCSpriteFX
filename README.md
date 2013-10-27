@@ -10,6 +10,11 @@ Cocos2d-x color and texture transform effect extension.
    * 精灵的纹理坐标偏移，旋转，缩放，切变动画
 
 
+局限
+-------------------
+   * 精灵加入batch node后无法获得效果
+
+
 依赖
 -------------------
    * cocos2d-x v3.0 以上
