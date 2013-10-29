@@ -13,6 +13,7 @@ Cocos2d-x color and texture transform effect extension.
 局限
 -------------------
    * 精灵加入batch node后无法获得效果
+   * 不要将SpriteFX用于ClippingNode的stencil(由于ClippingNode会替换掉stencil的GLProgram导致OpenGL error 0x0502)
 
 
 依赖
