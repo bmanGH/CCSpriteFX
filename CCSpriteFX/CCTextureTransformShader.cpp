@@ -17,7 +17,7 @@ NS_CC_EXT_BEGIN
 const GLchar* ccShader_PositionTextureColorTextureTransform_vert = SHADER_STRING
 (
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
  
 uniform mat3 u_texMatrix;
