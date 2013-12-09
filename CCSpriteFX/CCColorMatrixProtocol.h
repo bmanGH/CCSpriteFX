@@ -15,7 +15,8 @@
 NS_CC_EXT_BEGIN
 
 
-class ColorMatrixProtocol {
+class CC_DLL ColorMatrixProtocol {
+    
 public:
     virtual ~ColorMatrixProtocol () {};
     
@@ -25,6 +26,7 @@ public:
     
     virtual void setNeedResetColorMatrixAfterDraw (bool value) = 0;
     virtual bool isNeedResetColorMatrixAfterDraw () = 0;
+    
 };
 
 

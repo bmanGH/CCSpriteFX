@@ -14,7 +14,7 @@
 NS_CC_EXT_BEGIN
 
 
-class TextureTransformProtocol {
+class CC_DLL TextureTransformProtocol {
     
 public:
     virtual ~TextureTransformProtocol () {};

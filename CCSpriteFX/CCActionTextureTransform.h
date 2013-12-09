@@ -18,7 +18,7 @@ NS_CC_EXT_BEGIN
 /**
  * texture crood
  */
-class TexAnchorMoveBy : public ActionInterval {
+class CC_DLL TexAnchorMoveBy : public ActionInterval {
     
 protected:
     float _startX;
@@ -46,7 +46,7 @@ public:
 /**
  * texture crood
  */
-class TexAnchorMoveTo : public TexAnchorMoveBy {
+class CC_DLL TexAnchorMoveTo : public TexAnchorMoveBy {
     
 protected:
     float _targetX;
@@ -71,7 +71,7 @@ public:
 /**
  * texture crood
  */
-class TexMoveBy : public ActionInterval {
+class CC_DLL TexMoveBy : public ActionInterval {
     
 protected:
     float _startX;
@@ -99,7 +99,7 @@ public:
 /**
  * texture crood
  */
-class TexMoveTo : public TexMoveBy {
+class CC_DLL TexMoveTo : public TexMoveBy {
     
 protected:
     float _targetX;
@@ -124,7 +124,7 @@ public:
 /**
  * clockwise
  */
-class TexRotateBy : public ActionInterval {
+class CC_DLL TexRotateBy : public ActionInterval {
     
 protected:
     float _startRot;
@@ -150,7 +150,7 @@ public:
 /**
  * clockwise
  */
-class TexRotateTo : public TexRotateBy {
+class CC_DLL TexRotateTo : public TexRotateBy {
     
 protected:
     float _targetRot;
@@ -171,7 +171,7 @@ public:
 };
 
 
-class TexScaleBy : public ActionInterval {
+class CC_DLL TexScaleBy : public ActionInterval {
     
 protected:
     float _startSX;
@@ -196,7 +196,7 @@ public:
 };
 
 
-class TexScaleTo : public TexScaleBy {
+class CC_DLL TexScaleTo : public TexScaleBy {
     
 protected:
     float _targetSX;
@@ -221,7 +221,7 @@ public:
 /**
  * degree
  */
-class TexSkewBy : public ActionInterval {
+class CC_DLL TexSkewBy : public ActionInterval {
     
 protected:
     float _startKX;
@@ -249,7 +249,7 @@ public:
 /**
  * degree
  */
-class TexSkewTo : public TexSkewBy {
+class CC_DLL TexSkewTo : public TexSkewBy {
     
 protected:
     float _targetKX;

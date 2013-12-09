@@ -20,7 +20,7 @@ NS_CC_EXT_BEGIN
 
 extern bool kCCProfilerCategorySpriteFX;
 
-class SpriteFX : public Sprite, public ColorMatrixProtocol, public TextureTransformProtocol {
+class CC_DLL SpriteFX : public cocos2d::Sprite, public ColorMatrixProtocol, public TextureTransformProtocol {
     
 protected:
     ColorMatrix4x4 _colorMatrix;
@@ -40,6 +40,9 @@ protected:
     bool _isTexTransformDirty;
     GLint _texMatrixUniformLocation;
     
+    SpriteFX ();
+    virtual ~SpriteFX ();
+    
     void updateShader ();
     void updateTexMatrix ();
     
@@ -51,9 +54,6 @@ public:
     static SpriteFX* createWithTexture(Texture2D *pTexture, const Rect& rect);
     static SpriteFX* createWithSpriteFrame(SpriteFrame *pSpriteFrame);
     static SpriteFX* createWithSpriteFrameName(const char *pszSpriteFrameName);
-    
-    SpriteFX ();
-    ~SpriteFX ();
     
     void setTextureWrapRepeat ();
     void setTextureWrapMirroredRepeat ();
@@ -89,6 +89,9 @@ public:
     virtual void setTexSkewX (float value) override;
     virtual float getTexSkewY () override;
     virtual void setTexSkewY (float value) override;
+    
+private:
+    CC_DISALLOW_COPY_AND_ASSIGN(SpriteFX);
     
 };
 
