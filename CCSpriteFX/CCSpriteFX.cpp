@@ -182,7 +182,6 @@ void SpriteFX::setTextureWrapClampToEdge () {
 
 #pragma mark - Override
 
-
 void SpriteFX::setTexture(Texture2D *texture) {
     Sprite::setTexture(texture);
     
@@ -192,9 +191,13 @@ void SpriteFX::setTexture(Texture2D *texture) {
 }
 
 void SpriteFX::draw () {
+    _customRenderCommand.init(0, _vertexZ);
+    _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
+    Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
+}
+
+void SpriteFX::render () {
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySpriteFX, "SpriteFX - draw");
-    
-    CCAssert(!_batchNode, "If SpriteFX is being rendered by CCSpriteBatchNode, CCSprite#draw SHOULD NOT be called");
     
     if (_isTexTransformDirty) {
         this->updateTexMatrix();
@@ -206,10 +209,9 @@ void SpriteFX::draw () {
     _shaderProgram->setUniformLocationWithMatrix4fv(_colorMatrixUniformLocation,
                                                     _colorMatrix.m,
                                                     1);
-//    _shaderProgram->setUniformLocationWithMatrix3fv(_texMatrixUniformLocation,
-//                                                    _texMatrix.mat,
-//                                                    1);
-    glUniformMatrix3fv(_texMatrixUniformLocation, 1, GL_FALSE, _texMatrix.mat);
+    _shaderProgram->setUniformLocationWithMatrix3fv(_texMatrixUniformLocation,
+                                                    _texMatrix.mat,
+                                                    1);
     
     GL::blendFunc( _blendFunc.src, _blendFunc.dst );
     

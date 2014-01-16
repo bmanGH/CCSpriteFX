@@ -39,6 +39,7 @@ protected:
     kmMat3 _texMatrix;
     bool _isTexTransformDirty;
     GLint _texMatrixUniformLocation;
+    CustomCommand _customRenderCommand;
     
     SpriteFX ();
     virtual ~SpriteFX ();
@@ -59,9 +60,10 @@ public:
     void setTextureWrapMirroredRepeat ();
     void setTextureWrapClampToEdge ();
     
-    // Override
+    // render
     virtual void setTexture(Texture2D *texture) override;
     virtual void draw () override;
+    void render ();
     
     // ColorMatrixProtocol
     virtual void setColorMatrix (const ColorMatrix4x4& colorMatrix) override;
