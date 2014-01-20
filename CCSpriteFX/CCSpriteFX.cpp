@@ -191,7 +191,7 @@ void SpriteFX::setTexture(Texture2D *texture) {
 }
 
 void SpriteFX::draw () {
-    _customRenderCommand.init(0, _vertexZ);
+    _customRenderCommand.init(_globalZOrder);
     _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
     Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
 }
