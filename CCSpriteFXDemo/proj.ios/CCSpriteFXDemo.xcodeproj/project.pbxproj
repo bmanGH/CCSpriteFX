@@ -356,7 +356,7 @@
 			isa = PBXGroup;
 			children = (
 				062E514A184C6F4100A8C98B /* cocos2d_libs.xcodeproj */,
-				D477CA97178BE7AB00A0A776 /* CCHierarchiesSpriteXDemo */,
+				D477CA97178BE7AB00A0A776 /* CCSpriteFXDemo */,
 				064C5C4C181044A70070FBA9 /* res */,
 				064C5C58181044A70070FBA9 /* src */,
 				D477CA86178BE7AB00A0A776 /* Frameworks */,
@@ -395,14 +395,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D477CA97178BE7AB00A0A776 /* CCHierarchiesSpriteXDemo */ = {
+		D477CA97178BE7AB00A0A776 /* CCSpriteFXDemo */ = {
 			isa = PBXGroup;
 			children = (
 				064C5C82181061940070FBA9 /* Source */,
 				064C5CC1181067F40070FBA9 /* Libraries */,
 				064C5C8A181061C40070FBA9 /* Resource */,
 			);
-			name = CCHierarchiesSpriteXDemo;
+			name = CCSpriteFXDemo;
 			path = ..;
 			sourceTree = "<group>";
 		};
