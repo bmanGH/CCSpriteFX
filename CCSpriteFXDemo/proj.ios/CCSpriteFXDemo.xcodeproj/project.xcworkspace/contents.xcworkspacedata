@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:CCHierarchiesSpriteXDemo.xcodeproj">
+      location = "self:CCSpriteFXDemo.xcodeproj">
    </FileRef>
 </Workspace>
