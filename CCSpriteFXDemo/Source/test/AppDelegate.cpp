@@ -18,7 +18,6 @@ bool AppDelegate::applicationDidFinishLaunching()
 {
     // initialize director & GLView
     Director *director = Director::getInstance();
-    GLView* glView = Director::getInstance()->getOpenGLView();
     director->setProjection(Director::Projection::_2D);
 
     // turn on display FPS

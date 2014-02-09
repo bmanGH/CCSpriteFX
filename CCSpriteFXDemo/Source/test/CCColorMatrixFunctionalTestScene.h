@@ -6,6 +6,11 @@
 #include "CCSpriteFX.h"
 #include "CCActionColorMatrix.h"
 
+
+#include "MonkVG/openvg.h"
+#include "MonkVG/vgu.h"
+#include "MonkVG/vgext.h"
+
 USING_NS_CC;
 USING_NS_CC_EXT;
 
@@ -22,6 +27,20 @@ private:
     SpriteFX* spr8;
     SpriteFX* spr9;
     
+    CustomCommand _customRenderCommand;
+    
+    VGPath	_path;
+	VGPaint _paint;
+	VGPaint _linearGradientPaint;
+	VGPaint _radialGradientPaint;
+//	VGImage _image;
+//	VGImage	_bitmapFont;
+	//	VGImage _gradientImage;
+	VGPath _linearGradientPath;
+	VGPath _radialGradientPath;
+	VGFont	_font;
+	VGfloat _lineHeight;
+    
 public:
     static Scene* scene();
     CREATE_FUNC(CCColorMatrixFunctionalTestScene);
@@ -35,6 +54,7 @@ public:
     
     // draw
     virtual void draw () override;
+    void render ();
     
     // touch callback
     virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *event) override;
