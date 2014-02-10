@@ -26,7 +26,7 @@ NS_CC_EXT_BEGIN
 class CC_DLL PathRenderingPath {
     
 public:
-    enum PathSegment {
+    enum PathSegment : unsigned int {
         PATH_CLOSE_PATH                               = ( 0 << 1),
         PATH_MOVE_TO                                  = ( 1 << 1),
         PATH_LINE_TO                                  = ( 2 << 1),
@@ -48,20 +48,9 @@ public:
         ARC_PIE                             =  2,
     };
     
-    enum PathCapabilities {
-        PATH_CAPABILITY_APPEND_FROM              = (1 <<  0),
-        PATH_CAPABILITY_APPEND_TO                = (1 <<  1),
-        PATH_CAPABILITY_MODIFY                   = (1 <<  2),
-        PATH_CAPABILITY_TRANSFORM_FROM           = (1 <<  3),
-        PATH_CAPABILITY_TRANSFORM_TO             = (1 <<  4),
-        PATH_CAPABILITY_INTERPOLATE_FROM         = (1 <<  5),
-        PATH_CAPABILITY_INTERPOLATE_TO           = (1 <<  6),
-        PATH_CAPABILITY_PATH_LENGTH              = (1 <<  7),
-        PATH_CAPABILITY_POINT_ALONG_PATH         = (1 <<  8),
-        PATH_CAPABILITY_TANGENT_ALONG_PATH       = (1 <<  9),
-        PATH_CAPABILITY_PATH_BOUNDS              = (1 << 10),
-        PATH_CAPABILITY_PATH_TRANSFORMED_BOUNDS  = (1 << 11),
-        PATH_CAPABILITY_ALL                      = (1 << 12) - 1,
+    enum PathFillRule {
+        FILL_RULE_EVEN_ODD                                 = 0x1900,
+        FILL_RULE_NON_ZERO                                 = 0x1901,
     };
     
     struct v2_t {
@@ -91,13 +80,10 @@ public:
     
 protected:
     // 2d
-    int                 _format;
-    float				_scale;
-    float				_bias;
     int                 _numSegments;
     int                 _numCoords;
-    unsigned int			_capabilities;
-    std::vector< unsigned char >    _segments;
+    int                 _tessellationIterations;
+    std::vector< unsigned int >    _segments;
     std::vector< float >            _fcoords;
     bool                            _isFillDirty;
     bool                            _isStrokeDirty;
@@ -112,6 +98,7 @@ protected:
     std::vector<v2_t>		_strokeVertices;
     std::list<v3_t>			_tessVertices;
     GLenum                  _primType;
+    GLenum                  _bufferMode;
     GLuint                  _fillVBO;
     GLuint                  _strokeVBO;
     int                     _numberFillVertices;
@@ -119,13 +106,16 @@ protected:
     PathRenderingPaint*     _fillPaintForPath;
     PathRenderingPaint*     _strokePaintForPath;
     
+    // use in gluTess callback
+    GLdouble startVertex_[2];
+	GLdouble lastVertex_[2];
+	int vertexCount_ = 0;
+    
 public:
-    PathRenderingPath( int pathFormat,
-                      float scale,
-                      float bias,
-                      int segmentCapacityHint,
+    PathRenderingPath(int segmentCapacityHint,
                       int coordCapacityHint,
-                      unsigned int capabilities );
+                      int tessellationIterations = 50,
+                      GLenum bufferMode = GL_STATIC_DRAW);
     virtual ~PathRenderingPath();
     
     void draw( unsigned int paintModes );
@@ -145,8 +135,8 @@ public:
     void cubicBezierCurveTo (const Point& control1, const Point& control2, const Point& to, unsigned int segments = 50);
     void arc (const Point& to);
     void arcTo (const Point& to);
-    void fill (PathRenderingPaint* paint);
-    void stroke (PathRenderingPaint* paint);
+    void fill (PathRenderingPaint* paint, PathFillRule fillRule);
+    void stroke (PathRenderingPaint* paint, float lineWidth);
     
     // Shape
     void line (const Point& from, const Point& to);
@@ -160,46 +150,12 @@ public:
     void cubicBezierCurve(const Point& from, const Point& control1, const Point& control2, const Point& to, unsigned int segments = 50);
     
     // property
-    int getFormat() const {
-        return _format;
-    }
-    void setFormat( const int f ) {
-        _format = f;
-    }
-    
-    float getScale() const {
-        return _scale;
-    }
-    void setScale( const float s ) {
-        _scale = s;
-    }
-    
-    float getBias() const {
-        return _bias;
-    }
-    void setBias( const float b ) {
-        _bias = b;
-    }
-    
     int getNumSegments() const {
         return _numSegments;
-    }
-    void setNumSegments( const int ns ) {
-        _numSegments = ns;
     }
     
     int getNumCoords() const {
         return _numCoords;
-    }
-    void setNumCoords( const int nc ) {
-        _numCoords = nc;
-    }
-    
-    unsigned int getCapabilities( ) const {
-        return _capabilities;
-    }
-    void setCapabilities( const unsigned int c ) {
-        _capabilities = c;
     }
     
     bool getIsDirty() {
@@ -230,30 +186,34 @@ public:
         return cocos2d::Rect(_minX, _minY, _width, _height);
     }
     
-    GLenum primType() {
+    GLenum getPrimType() {
         return _primType;
     }
     void setPrimType( GLenum t ) {
         _primType = t;
     }
     
+    GLenum getBufferMode () {
+        return _bufferMode;
+    }
+    void setBufferMode ( GLenum t ) {
+        _bufferMode = t;
+    }
+    
 protected:
     // tesseleator callbacks
-    static void tessBegin( GLenum type, GLvoid* user );
-    static void tessEnd( GLvoid* user );
-    static void tessVertex( GLvoid *vertex, GLvoid* user );
-    static void tessCombine( GLdouble coords[3], void *data[4],
+    static GLvoid tessBegin( GLenum type, GLvoid* user );
+    static GLvoid tessEnd( GLvoid* user );
+    static GLvoid tessVertex( GLvoid *vertex, GLvoid* user );
+    static GLvoid tessCombine( GLdouble coords[3], void *data[4],
                             GLfloat weight[4], void **outData,
                             void *polygonData );
-    static void tessError( GLenum errorCode );
+    static GLvoid tessError( GLenum errorCode );
+    
+    // internal methods
     void endOfTesselation( unsigned int paintModes );
-    
-    // utility methods
-    void buildFill();
-    void buildStroke();
     void buildFatLineSegment( std::vector<v2_t>& vertices, const v2_t& p0, const v2_t& p1, const float radius );
-    
-    void appendData( const int numSegments, const unsigned char* pathSegments, const void* pathData ) ;
+    void appendData( const int numSegments, const unsigned int* pathSegments, const void* pathData ) ;
     int32_t segmentToNumCoordinates(PathSegment segment);
     
 };
