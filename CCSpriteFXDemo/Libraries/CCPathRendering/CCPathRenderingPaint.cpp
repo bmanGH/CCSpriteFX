@@ -12,6 +12,28 @@
 NS_CC_EXT_BEGIN
 
 
+PathRenderingPaint::PathRenderingPaint (PaintType type)
+{
+}
+
+PathRenderingPaint::~PathRenderingPaint ()
+{
+}
+
+
+#pragma mark - Clonable
+
+cocos2d::Clonable* PathRenderingPaint::clone () const {
+    //TODO
+    return nullptr;
+}
+
+
+#pragma mark - internal
+
+void PathRenderingPaint::buildGradientImage (float width, float height) {
+    
+}
 
 
 NS_CC_EXT_END

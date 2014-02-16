@@ -25,7 +25,8 @@ USING_NS_CC;
 class CC_DLL GraphicsNode : public cocos2d::Node {
     
 protected:
-    std::vector<PathRenderingPath*> _paths;
+    Vector<PathRenderingPath*> _paths;
+    CustomCommand _customRenderCommand;
     
 protected:
     GraphicsNode ();
@@ -35,20 +36,13 @@ protected:
 public:
     GraphicsNode* create ();
     
-    const std::vector<PathRenderingPath*>& getPaths () {
+    const Vector<PathRenderingPath*>& getPaths () {
         return _paths;
     }
     
     virtual Rect getBoundingBox() const override;
-    
-    // Path
-    PathRenderingPath* beginPath ();
-    void closePath (PathRenderingPath* path);
-    
-    // Paint
-    PathRenderingPaint* createColorPaint ();
-    PathRenderingPaint* createLinearGradientPaint ();
-    PathRenderingPaint* createRadialGradientPaint ();
+    void addPath (PathRenderingPath* path);
+    void clear ();
     
     // draw
     virtual void draw () override;
@@ -56,6 +50,7 @@ public:
     void drawPath (PathRenderingPath* path);
     
 private:
+    typedef cocos2d::Node super;
     CC_DISALLOW_COPY_AND_ASSIGN(GraphicsNode);
     
 };

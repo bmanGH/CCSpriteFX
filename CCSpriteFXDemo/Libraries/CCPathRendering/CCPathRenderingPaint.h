@@ -18,7 +18,7 @@
 NS_CC_EXT_BEGIN
 
 
-class CC_DLL PathRenderingPaint {
+class CC_DLL PathRenderingPaint : public cocos2d::Object, public Clonable {
     
 public:
     enum PaintType {
@@ -39,12 +39,21 @@ public:
     PathRenderingPaint (PaintType type);
     virtual ~PathRenderingPaint ();
     
-    void buildGradientImage (float width, float height) { /*TODO*/ }
-    
     // property
     PaintType getPaintType () {
         return _type;
     }
+    
+    // Clonable
+    virtual cocos2d::Clonable* clone () const;
+    
+protected:
+    void buildGradientImage (float width, float height);
+    
+private:
+    CC_DISALLOW_COPY_AND_ASSIGN(PathRenderingPaint);
+    
+    friend class PathRenderingPath;
     
 };
 
