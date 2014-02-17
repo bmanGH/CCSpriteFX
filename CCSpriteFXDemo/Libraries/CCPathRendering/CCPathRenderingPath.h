@@ -96,6 +96,8 @@ protected:
     float               _lineWidth;
     PathRenderingPaint*     _fillPaintForPath;
     PathRenderingPaint*     _strokePaintForPath;
+    Point               _beginPoint;
+    Point               _currentPoint;
     bool                _isStyled;
     
     std::vector<v2_t>       _fillVertices;
@@ -129,6 +131,8 @@ public:
     
     void clear();
     bool isStyled () { return _isStyled; }
+    Point getBeginPoint () { return _beginPoint; }
+    Point getCurrentPoint () { return _currentPoint; }
     
     // path command
     void moveTo (const Point& to);
@@ -141,7 +145,7 @@ public:
     
     // Shape
     void line (const Point& from, const Point& to);
-    void polygon (const std::vector<Point>& points, bool closed);
+    void polygon (const std::vector<Point>& points, bool closed); // points size should >= 2
     void rect (const Point& origin, const Size& size);
     void roundRect (const Point& origin, const Size& size, const Size& arcSize);
     void ellipse (const Point& center, const Size& size);

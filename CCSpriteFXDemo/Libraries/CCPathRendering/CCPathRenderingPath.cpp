@@ -177,6 +177,8 @@ _height(-MAXFLOAT),
 _width(-MAXFLOAT),
 _fillPaintForPath(nullptr),
 _strokePaintForPath(nullptr),
+_beginPoint(0, 0),
+_currentPoint(0, 0),
 _isStyled(false),
 _fillTesseleator(0),
 _primType(0),
@@ -219,6 +221,10 @@ void PathRenderingPath::clear() {
     _height = -MAXFLOAT;
     CC_SAFE_RELEASE_NULL(_fillPaintForPath);
     CC_SAFE_RELEASE_NULL(_strokePaintForPath);
+    _beginPoint = Point::ZERO;
+    _currentPoint = Point::ZERO;
+    
+    _isStyled = false;
     
     // 3d
     if ( _strokeVBO != -1 ) {
@@ -230,7 +236,6 @@ void PathRenderingPath::clear() {
         _fillVBO = -1;
     }
     
-    _isStyled = false;
     this->setIsDirty(true);
 }
 
@@ -247,6 +252,9 @@ void PathRenderingPath::moveTo (const Point& to) {
         to.y
     };
 	this->appendData(1, segments, data);
+    
+    _beginPoint = to;
+    _currentPoint = to;
 }
 
 void PathRenderingPath::lineTo (const Point& to) {
@@ -259,6 +267,8 @@ void PathRenderingPath::lineTo (const Point& to) {
         to.y
     };
 	this->appendData(1, segments, data);
+    
+    _currentPoint = to;
 }
 
 void PathRenderingPath::quadraticBezierCurveTo (const Point& control, const Point& to) {
@@ -273,6 +283,8 @@ void PathRenderingPath::quadraticBezierCurveTo (const Point& control, const Poin
         to.y
     };
 	this->appendData(1, segments, data);
+    
+    _currentPoint = to;
 }
 
 void PathRenderingPath::cubicBezierCurveTo (const Point& control1, const Point& control2, const Point& to) {
@@ -289,6 +301,8 @@ void PathRenderingPath::cubicBezierCurveTo (const Point& control1, const Point& 
         to.y
     };
 	this->appendData(1, segments, data);
+    
+    _currentPoint = to;
 }
 
 void PathRenderingPath::arcTo (const Size& arcSize, const float rot, const Point& to) {
@@ -304,66 +318,68 @@ void PathRenderingPath::arcTo (const Size& arcSize, const float rot, const Point
         to.y
     };
 	this->appendData(1, segments, data);
+    
+    _currentPoint = to;
 }
 
-void PathRenderingPath::arcTo (const Point& from, const Point& to, float radius) {
-//    // See http://philip.html5.org/tests/canvas/suite/tests/spec.html#arcto.
-//    
-//    const FloatPoint& point0 = m_path->m_currentPoint;
-//    if (!radius || point0 == point1 || point1 == point2) {
-//        addLineTo(point1);
-//        return;
-//    }
-//    
-//    FloatSize v01 = point0 - point1;
-//    FloatSize v21 = point2 - point1;
-//    
-//    // sin(A - B) = sin(A) * cos(B) - sin(B) * cos(A)
-//    double cross = v01.width() * v21.height() - v01.height() * v21.width();
-//    
-//    if (fabs(cross) < 1E-10) {
-//        // on one line
-//        addLineTo(point1);
-//        return;
-//    }
-//    
-//    double d01 = hypot(v01.width(), v01.height());
-//    double d21 = hypot(v21.width(), v21.height());
-//    double angle = (piDouble - fabs(asin(cross / (d01 * d21)))) * 0.5;
-//    double span = radius * tan(angle);
-//    double rate = span / d01;
-//    FloatPoint startPoint = FloatPoint(point1.x() + v01.width() * rate,
-//                                       point1.y() + v01.height() * rate);
-//    rate = span / d21;
-//    FloatPoint endPoint = FloatPoint(point1.x() + v21.width() * rate,
-//                                     point1.y() + v21.height() * rate);
-//    
-//    // Fa: large arc flag, makes the difference between SCWARC_TO and LCWARC_TO
-//    //     respectively SCCWARC_TO and LCCWARC_TO arcs. We always use small
-//    //     arcs for arcTo(), as the arc is defined as the "shortest arc" of the
-//    //     circle specified in HTML 5.
-//    
-//    // Fs: sweep flag, specifying whether the arc is drawn in increasing (true)
-//    //     or decreasing (0) direction.
-//    const bool anticlockwise = cross < 0;
-//    
-//    // Translate the large arc and sweep flags into an OpenVG segment command.
-//    const VGubyte segmentCommand = anticlockwise ? VG_SCCWARC_TO_ABS : VG_SCWARC_TO_ABS;
-//    
-//    const VGubyte pathSegments[] = {
-//        VG_LINE_TO_ABS,
-//        segmentCommand
-//    };
-//    const VGfloat pathData[] = {
-//        startPoint.x(), startPoint.y(),
-//        radius, radius, 0, endPoint.x(), endPoint.y()
-//    };
-//    
-//    m_path->makeCompatibleContextCurrent();
-//    vgAppendPathData(m_path->vgPath(), 2, pathSegments, pathData);
-//    ASSERT_VG_NO_ERROR();
-//    
-//    m_path->m_currentPoint = endPoint;
+void PathRenderingPath::arcTo (const Point& point1, const Point& point2, float radius) {
+    if (_isStyled)
+        return;
+    
+    const Point point0 = _beginPoint;
+    
+    if (!radius || point0 == point1 || point1 == point2) {
+        this->lineTo(point1);
+        return;
+    }
+    
+    Size v01 = Size(point0 - point1);
+    Size v21 = Size(point2 - point1);
+    
+    // sin(A - B) = sin(A) * cos(B) - sin(B) * cos(A)
+    float cross = v01.width * v21.height - v01.height * v21.width;
+    
+    if (fabsf(cross) < 1E-10) {
+        // on one line
+        this->lineTo(point1);
+        return;
+    }
+    
+    float d01 = hypotf(v01.width, v01.height);
+    float d21 = hypotf(v21.width, v21.height);
+    float angle = (2 * M_PI - fabsf(asinf(cross / (d01 * d21)))) * 0.5f;
+    float span = radius * tanf(angle);
+    float rate = span / d01;
+    Point startPoint = Point(point1.x + v01.width * rate,
+                             point1.y + v01.height * rate);
+    rate = span / d21;
+    Point endPoint = Point(point1.x + v21.width * rate,
+                           point1.y + v21.height * rate);
+    
+    // Fa: large arc flag, makes the difference between SCWARC_TO and LCWARC_TO
+    //     respectively SCCWARC_TO and LCCWARC_TO arcs. We always use small
+    //     arcs for arcTo(), as the arc is defined as the "shortest arc" of the
+    //     circle specified in HTML 5.
+    
+    // Fs: sweep flag, specifying whether the arc is drawn in increasing (true)
+    //     or decreasing (0) direction.
+    const bool anticlockwise = cross < 0;
+    
+    // Translate the large arc and sweep flags into an OpenVG segment command.
+    const unsigned int segmentCommand = anticlockwise ? PATH_SCCWARC_TO : PATH_SCWARC_TO;
+    
+    const unsigned int segments[] = {
+        PATH_LINE_TO,
+        segmentCommand
+    };
+    const float data[] = {
+        startPoint.x, startPoint.y,
+        radius, radius, 0, endPoint.x, endPoint.y
+    };
+    this->appendData(2, segments, data);
+    
+    _beginPoint = point1;
+    _currentPoint = point2;
 }
 
 void PathRenderingPath::close () {
@@ -372,6 +388,8 @@ void PathRenderingPath::close () {
     
     const unsigned int segments[1] = { PATH_CLOSE_PATH };
 	this->appendData(1, segments, nullptr);
+    
+    _currentPoint = _beginPoint;
 }
 
 void PathRenderingPath::line (const Point& from, const Point& to) {
@@ -385,21 +403,15 @@ void PathRenderingPath::line (const Point& from, const Point& to) {
 void PathRenderingPath::polygon (const std::vector<Point>& points, bool closed) {
     if (_isStyled)
         return;
-	
-	unsigned int segments[1] = { PATH_MOVE_TO };
-	float data[2];
-	for(int i = 0; i < points.size(); i++)
-	{
-		data[0] = points[i].x;
-		data[1] = points[i].y;
-		this->appendData(1, segments, data);
-		segments[0] = PATH_LINE_TO;
-	}
+    
+    if (points.size() < 2)
+        return;
+    
+    this->moveTo(points[0]);
+	for(int i = 1; i < points.size(); i++)
+		this->lineTo(points[i]);
 	if(closed)
-	{
-		segments[0] = PATH_CLOSE_PATH;
-		this->appendData(1, segments, data);
-	}
+        this->close();
 }
 
 void PathRenderingPath::rect (const Point& origin, const Size& size) {
@@ -421,6 +433,9 @@ void PathRenderingPath::rect (const Point& origin, const Size& size) {
         origin.x
     };
 	this->appendData(5, segments, data);
+    
+    _beginPoint = origin;
+    _currentPoint = origin;
 }
 
 void PathRenderingPath::roundRect (const Point& origin, const Size& size, const Size& arcSize) {
@@ -454,6 +469,9 @@ void PathRenderingPath::roundRect (const Point& origin, const Size& size, const 
         arcWidth / 2, arcHeight / 2, 0, origin.x + arcWidth / 2, origin.y
     };
 	this->appendData(10, segments, data);
+    
+    _beginPoint = origin;
+    _currentPoint = origin;
 }
 
 void PathRenderingPath::ellipse (const Point& center, const Size& size) {
@@ -472,6 +490,9 @@ void PathRenderingPath::ellipse (const Point& center, const Size& size) {
 		size.width / 2, size.height / 2, 0, center.x + size.width / 2, center.y
     };
 	this->appendData(4, segments, data);
+    
+    _beginPoint = center;
+    _currentPoint = center;
 }
 
 void PathRenderingPath::arc (const Point& center, const Size& size, float startAngle, float angleExtent, PathRenderingPath::ArcType arcType) {
@@ -491,6 +512,8 @@ void PathRenderingPath::arc (const Point& center, const Size& size, float startA
 	data[0] = center.x + w * cosf(startAngle);
 	data[1] = center.y + h * sinf(startAngle);
     this->appendData(1, segments, data);
+    
+    _beginPoint = Point(data[0], data[1]);
 	
 	data[0] = w;
 	data[1] = h;
@@ -519,11 +542,15 @@ void PathRenderingPath::arc (const Point& center, const Size& size, float startA
 	data[3] = center.x + w * cosf(endAngle);
 	data[4] = center.y + h * sinf(endAngle);
 	this->appendData(1, segments, data);
+    
+    _currentPoint = Point(data[3], data[4]);
 	
 	if(arcType == ARC_CHORD)
 	{
 		segments[0] = PATH_CLOSE_PATH;
 		this->appendData(1, segments, data);
+        
+        _currentPoint = _beginPoint;
 	}
 	else if(arcType == ARC_PIE)
 	{
@@ -533,6 +560,8 @@ void PathRenderingPath::arc (const Point& center, const Size& size, float startA
 		this->appendData(1, segments, data);
 		segments[0] = PATH_CLOSE_PATH;
 		this->appendData(1, segments, data);
+        
+        _currentPoint = _beginPoint;
 	}
 }
 

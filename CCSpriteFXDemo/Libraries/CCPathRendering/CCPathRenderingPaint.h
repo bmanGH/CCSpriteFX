@@ -18,7 +18,7 @@
 NS_CC_EXT_BEGIN
 
 
-class CC_DLL PathRenderingPaint : public cocos2d::Object, public Clonable {
+class CC_DLL PathRenderingPaint : public cocos2d::Object, public cocos2d::Clonable {
     
 public:
     enum PaintType {
@@ -32,8 +32,36 @@ public:
         PAINT_TYPE_RADIAL_2x3_GRADIENT               = 0x1B05,
     };
     
+    enum PaintTilingMode {
+        PAINT_TILE_FILL                                = 0x1D00,
+        PAINT_TILE_PAD                                 = 0x1D01,
+        PAINT_TILE_REPEAT                              = 0x1D02,
+        PAINT_TILE_REFLECT                             = 0x1D03,
+    };
+    
+    enum PaintColorRampSpreadMode {
+        PAINT_COLOR_RAMP_SPREAD_PAD                    = 0x1C00,
+        PAINT_COLOR_RAMP_SPREAD_REPEAT                 = 0x1C01,
+        PAINT_COLOR_RAMP_SPREAD_REFLECT                = 0x1C02,
+    };
+    
+    struct color_ramp_stop_t {
+        float a[5];
+    };
+    
 protected:
-    PaintType _type;
+    PaintType               _paintType;
+    Color4F                 _paintColor;
+    PaintColorRampSpreadMode     _colorRampSpreadMode;
+    bool                    _colorRampPremultiplied;
+    float					_paintLinearGradient[4];
+    float					_paintRadialGradient[5];
+    float					_paint2x3Gradient[6];
+    PaintTilingMode              _patternTilingMode;
+    std::vector<color_ramp_stop_t>		_colorRampStops;
+    
+    Texture2D*		_gradientImage;
+    bool            _isDirty;
     
 public:
     PathRenderingPaint (PaintType type);
@@ -41,14 +69,30 @@ public:
     
     // property
     PaintType getPaintType () {
-        return _type;
+        return _paintType;
+    }
+    
+    Color4F getPaintColor () {
+        return _paintColor;
+    }
+    
+    void setPaintColor (Color4F v) {
+        _paintColor = v;
+    }
+    
+    Texture2D* getGradientImage() {
+        return _gradientImage;
     }
     
     // Clonable
     virtual cocos2d::Clonable* clone () const;
     
 protected:
-    void buildGradientImage (float width, float height);
+    void buildGradientImage (float pathWidth, float pathHeight);
+    void buildLinearGradientImage(float pathWidth, float pathHeight);
+    void buildRadialGradientImage(float pathWidth, float pathHeight);
+    void buildLinear2x3GradientImage(float pathWidth, float pathHeight);
+    void buildRadial2x3GradientImage(float pathWidth, float pathHeight);
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(PathRenderingPaint);
