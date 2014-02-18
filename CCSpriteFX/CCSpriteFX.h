@@ -61,6 +61,7 @@ public:
     void setTextureWrapClampToEdge ();
     
     // render
+    virtual void setTexture(const std::string& fileName) override;
     virtual void setTexture(Texture2D *texture) override;
     virtual void draw () override;
     void render ();
