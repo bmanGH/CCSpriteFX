@@ -1362,7 +1362,7 @@ void PathRenderingPath::buildFillVBO () {
         glBindBuffer( GL_ARRAY_BUFFER, _fillVBO );
         if ( _fillPaintForPath &&
             _fillPaintForPath->getPaintType() == PathRenderingPaint::PAINT_TYPE_COLOR ) {
-            glBufferData( GL_ARRAY_BUFFER, _fillVertices.size() * sizeof(float), &_fillVertices[0], _bufferMode );
+            glBufferData( GL_ARRAY_BUFFER, _fillVertices.size() * sizeof(v2_t), &_fillVertices[0], _bufferMode );
         } else if ( _fillPaintForPath &&
                    (_fillPaintForPath->getPaintType() == PathRenderingPaint::PAINT_TYPE_LINEAR_GRADIENT ||
                     _fillPaintForPath->getPaintType() == PathRenderingPaint::PAINT_TYPE_RADIAL_GRADIENT ||
@@ -1391,6 +1391,7 @@ void PathRenderingPath::buildFillVBO () {
         
         _tessVertices.clear();
         
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
         CHECK_GL_ERROR_DEBUG();
     }
 }
@@ -1404,10 +1405,11 @@ void PathRenderingPath::buildStrokeVBO () {
     if ( _strokeVertices.size() > 0 ) {
         glGenBuffers( 1, &_strokeVBO );
         glBindBuffer( GL_ARRAY_BUFFER, _strokeVBO );
-        glBufferData( GL_ARRAY_BUFFER, _strokeVertices.size() * sizeof(float) * 2, &_strokeVertices[0], _bufferMode );
+        glBufferData( GL_ARRAY_BUFFER, _strokeVertices.size() * sizeof(v2_t), &_strokeVertices[0], _bufferMode );
         
         _numberStrokeVertices = (int)_strokeVertices.size();
         
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
         CHECK_GL_ERROR_DEBUG();
     }
 }

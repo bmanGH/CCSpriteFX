@@ -25,19 +25,19 @@ public:
         PAINT_TYPE_COLOR                         = 0x1B00,
         PAINT_TYPE_LINEAR_GRADIENT               = 0x1B01,
         PAINT_TYPE_RADIAL_GRADIENT               = 0x1B02,
-        PAINT_TYPE_PATTERN                       = 0x1B03,
+//        PAINT_TYPE_PATTERN                       = 0x1B03,
         
         /* 2x3 matrix gradients */
         PAINT_TYPE_LINEAR_2x3_GRADIENT               = 0x1B04,
         PAINT_TYPE_RADIAL_2x3_GRADIENT               = 0x1B05,
     };
     
-    enum PaintTilingMode {
-        PAINT_TILE_FILL                                = 0x1D00,
-        PAINT_TILE_PAD                                 = 0x1D01,
-        PAINT_TILE_REPEAT                              = 0x1D02,
-        PAINT_TILE_REFLECT                             = 0x1D03,
-    };
+//    enum PaintTilingMode {
+//        PAINT_TILE_FILL                                = 0x1D00,
+//        PAINT_TILE_PAD                                 = 0x1D01,
+//        PAINT_TILE_REPEAT                              = 0x1D02,
+//        PAINT_TILE_REFLECT                             = 0x1D03,
+//    };
     
     enum PaintColorRampSpreadMode {
         PAINT_COLOR_RAMP_SPREAD_PAD                    = 0x1C00,
@@ -57,7 +57,7 @@ protected:
     float					_paintLinearGradient[4];
     float					_paintRadialGradient[5];
     float					_paint2x3Gradient[6];
-    PaintTilingMode              _patternTilingMode;
+//    PaintTilingMode              _patternTilingMode;
     std::vector<color_ramp_stop_t>		_colorRampStops;
     
     Texture2D*		_gradientImage;

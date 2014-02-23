@@ -26,6 +26,7 @@ class CC_DLL GraphicsNode : public cocos2d::Node {
     
 protected:
     Vector<PathRenderingPath*> _paths;
+    BlendFunc _blendFunc;
     CustomCommand _customRenderCommand;
     
 protected:
@@ -36,6 +37,8 @@ protected:
 public:
     GraphicsNode* create ();
     
+    const BlendFunc& getBlendFunc() const;
+    void setBlendFunc(const BlendFunc &blendFunc);
     const Vector<PathRenderingPath*>& getPaths () {
         return _paths;
     }
