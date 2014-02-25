@@ -195,9 +195,11 @@ void SpriteFX::setTexture(Texture2D *texture) {
 }
 
 void SpriteFX::draw () {
-    _customRenderCommand.init(_globalZOrder);
-    _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
-    Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
+    if (this->isInsideBounds()) {
+        _customRenderCommand.init(_globalZOrder);
+        _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
+        Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
+    }
 }
 
 void SpriteFX::render () {
@@ -250,25 +252,24 @@ void SpriteFX::render () {
     
     CHECK_GL_ERROR_DEBUG();
     
-    
 #if CC_SPRITE_DEBUG_DRAW == 1
     // draw bounding box
-    CCPoint vertices[4]={
-        ccp(m_sQuad.tl.vertices.x,m_sQuad.tl.vertices.y),
-        ccp(m_sQuad.bl.vertices.x,m_sQuad.bl.vertices.y),
-        ccp(m_sQuad.br.vertices.x,m_sQuad.br.vertices.y),
-        ccp(m_sQuad.tr.vertices.x,m_sQuad.tr.vertices.y),
+    Point vertices[4] = {
+        Point( _quad.bl.vertices.x, _quad.bl.vertices.y ),
+        Point( _quad.br.vertices.x, _quad.br.vertices.y ),
+        Point( _quad.tr.vertices.x, _quad.tr.vertices.y ),
+        Point( _quad.tl.vertices.x, _quad.tl.vertices.y ),
     };
-    ccDrawPoly(vertices, 4, true);
+    DrawPrimitives::drawPoly(vertices, 4, true);
 #elif CC_SPRITE_DEBUG_DRAW == 2
     // draw texture box
-    CCSize s = this->getTextureRect().size;
-    CCPoint offsetPix = this->getOffsetPosition();
-    CCPoint vertices[4] = {
-        ccp(offsetPix.x,offsetPix.y), ccp(offsetPix.x+s.width,offsetPix.y),
-        ccp(offsetPix.x+s.width,offsetPix.y+s.height), ccp(offsetPix.x,offsetPix.y+s.height)
+    Size s = this->getTextureRect().size;
+    Point offsetPix = this->getOffsetPosition();
+    Point vertices[4] = {
+        Point(offsetPix.x,offsetPix.y), Point(offsetPix.x+s.width,offsetPix.y),
+        Point(offsetPix.x+s.width,offsetPix.y+s.height), Point(offsetPix.x,offsetPix.y+s.height)
     };
-    ccDrawPoly(vertices, 4, true);
+    DrawPrimitives::drawPoly(vertices, 4, true);
 #endif // CC_SPRITE_DEBUG_DRAW
     
     CC_INCREMENT_GL_DRAWS(1);
