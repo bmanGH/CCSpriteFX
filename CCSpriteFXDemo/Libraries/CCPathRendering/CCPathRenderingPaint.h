@@ -18,7 +18,7 @@
 NS_CC_EXT_BEGIN
 
 
-class CC_DLL PathRenderingPaint : public cocos2d::Ref {
+class CC_DLL PathRenderingPaint : public cocos2d::Ref, public cocos2d::Clonable {
     
 public:
     enum PaintType {
@@ -128,9 +128,29 @@ public:
         _isDirty = true;
     }
     
+    const std::vector<color_ramp_stop_t>& getColorRampStops () {
+        return _colorRampStops;
+    }
+    
+    void setColorRampStops (float v[], int cnt) {
+        _colorRampStops.clear();
+        for ( int j = 0; j < cnt / 5; j++ ) {
+            color_ramp_stop_t stop;
+            for ( int p = 0; p < 5; p++ ) {
+                stop.a[p] = v[(j * 5) + p];
+            }
+            _colorRampStops.push_back( stop );
+        }
+        
+        _isDirty = true;
+    }
+    
     Texture2D* getGradientImage () {
         return _gradientImage;
     }
+    
+    // Clonable
+    virtual Clonable* clone() const;
     
 protected:
     void buildGradientImage (float pathWidth, float pathHeight);

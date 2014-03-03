@@ -159,17 +159,16 @@ static inline bool findEllipses(float rh, float rv, float rot,
 }
 
 
-PathRenderingPath::PathRenderingPath(int segmentCapacityHint,
-                                     int coordCapacityHint,
-                                     float scale,
+PathRenderingPath::PathRenderingPath(float scale,
                                      float bias,
                                      int tessellationIterations,
                                      GLenum bufferMode)
 : _scale(scale),
 _bias(bias),
-_numSegments(segmentCapacityHint),
-_numCoords(coordCapacityHint),
-_fcoords(coordCapacityHint),
+_numSegments(0),
+_numCoords(0),
+_segments(),
+_fcoords(),
 _tessellationIterations(tessellationIterations),
 _minX(MAXFLOAT),
 _minY(MAXFLOAT),
@@ -1125,6 +1124,13 @@ void PathRenderingPath::fillAndStroke (PathRenderingPaint* fillPaint, PathFillRu
     _isStyled = false;
     
     this->stroke(strokePaint, lineWidth);
+}
+
+
+#pragma mark - Clonable
+
+Clonable* PathRenderingPath::clone() const {
+    //TODO
 }
 
 

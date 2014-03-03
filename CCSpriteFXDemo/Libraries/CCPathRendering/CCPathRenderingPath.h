@@ -24,7 +24,7 @@ NS_CC_EXT_BEGIN
 /**
  * @note "coords" means the count of path segment's params, "path command" same as path segment
  */
-class CC_DLL PathRenderingPath : public cocos2d::Ref {
+class CC_DLL PathRenderingPath : public cocos2d::Ref, public cocos2d::Clonable {
     
 public:
     enum PathSegment : unsigned int {
@@ -121,9 +121,7 @@ protected:
 	int                     vertexCount_;
     
 public:
-    PathRenderingPath(int segmentCapacityHint,
-                      int coordCapacityHint,
-                      float scale = 1,
+    PathRenderingPath(float scale = 1,
                       float bias = 0,
                       int tessellationIterations = 50,
                       GLenum bufferMode = GL_STATIC_DRAW);
@@ -233,6 +231,9 @@ public:
     void setBufferMode ( GLenum t ) {
         _bufferMode = t;
     }
+    
+    // Clonable
+    virtual Clonable* clone() const;
     
 protected:
     // tesseleator callbacks

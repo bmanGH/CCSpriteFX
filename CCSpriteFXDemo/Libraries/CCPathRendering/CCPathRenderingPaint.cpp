@@ -14,14 +14,29 @@ NS_CC_EXT_BEGIN
 
 PathRenderingPaint::PathRenderingPaint (PaintType type)
 : _paintType(type),
+_paintColor(Color4F(0, 0, 0, 0)),
+_colorRampSpreadMode(PAINT_COLOR_RAMP_SPREAD_PAD),
 _isDirty(true),
 _gradientImage(nullptr)
 {
+    for (int i = 0; i < 4; i++)
+        _paintLinearGradient[i] = 0;
+    for (int i = 0; i < 5; i++)
+        _paintRadialGradient[i] = 0;
+    for (int i = 0; i < 6; i++)
+        _paint2x3Gradient[i] = 0;
 }
 
 PathRenderingPaint::~PathRenderingPaint ()
 {
     CC_SAFE_RELEASE(_gradientImage);
+}
+
+
+#pragma mark - Clonable
+
+Clonable* PathRenderingPaint::clone() const {
+    //TODO
 }
 
 

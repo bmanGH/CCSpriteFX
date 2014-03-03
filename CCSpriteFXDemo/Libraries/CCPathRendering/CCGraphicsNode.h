@@ -26,6 +26,10 @@ class CC_DLL GraphicsNode : public cocos2d::Node {
     
 protected:
     Vector<PathRenderingPath*> _paths;
+    
+    GLProgram* _shaderProgramPaintColor;
+    GLProgram* _shaderProgramPaintGradient;
+    GLint _colorUniform;
     BlendFunc _blendFunc;
     CustomCommand _customRenderCommand;
     
@@ -35,13 +39,14 @@ protected:
     virtual bool init ();
     
 public:
-    GraphicsNode* create ();
+    static GraphicsNode* create ();
     
     const BlendFunc& getBlendFunc() const;
     void setBlendFunc(const BlendFunc &blendFunc);
     const Vector<PathRenderingPath*>& getPaths () {
         return _paths;
     }
+    virtual void setShaderProgram(GLProgram *shaderProgram) override;
     
     virtual Rect getBoundingBox() const override;
     void addPath (PathRenderingPath* path);

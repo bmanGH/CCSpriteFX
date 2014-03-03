@@ -11,6 +11,10 @@
 #include "MonkVG/vgu.h"
 #include "MonkVG/vgext.h"
 
+#include "CCPathRendering/CCGraphicsNode.h"
+#include "CCPathRendering/CCPathRenderingPaint.h"
+#include "CCPathRendering/CCPathRenderingPath.h"
+
 USING_NS_CC;
 USING_NS_CC_EXT;
 
@@ -40,6 +44,8 @@ private:
 	VGPath _radialGradientPath;
 	VGFont	_font;
 	VGfloat _lineHeight;
+    
+    GraphicsNode* _graphicsNode;
     
 public:
     static Scene* scene();

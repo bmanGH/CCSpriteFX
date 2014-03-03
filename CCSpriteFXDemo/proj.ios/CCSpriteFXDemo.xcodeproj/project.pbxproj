@@ -42,6 +42,7 @@
 		064C5C6A181044A70070FBA9 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 064C5C5D181044A70070FBA9 /* RootViewController.mm */; };
 		06551CB5181D316800D872D8 /* CCColorMatrixFunctionalTestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06551CB3181D316800D872D8 /* CCColorMatrixFunctionalTestScene.cpp */; };
 		06551CC6181D405900D872D8 /* MainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06551CC4181D405900D872D8 /* MainMenuScene.cpp */; };
+		06A945D618C4DB5400FE1B91 /* CCPathRenderingShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06A945D418C4DB5400FE1B91 /* CCPathRenderingShader.cpp */; };
 		06AD6F04184FA11400D8DFF8 /* libcocos2dx-extensions iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 062E516E184C6F4200A8C98B /* libcocos2dx-extensions iOS.a */; };
 		06AFA6871855A695005A5E27 /* CCSpriteFX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06EDEC77181A7F7D00633CA9 /* CCSpriteFX.cpp */; };
 		06EDEC8A181A80A700633CA9 /* CCActionColorMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06EDEC7A181A80A700633CA9 /* CCActionColorMatrix.cpp */; };
@@ -128,20 +129,6 @@
 			remoteGlobalIDString = A03F2ED617814268006731B9;
 			remoteInfo = "CocosDenshion Mac";
 		};
-		062E5167184C6F4200A8C98B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 062E514A184C6F4100A8C98B /* cocos2d_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A03F31FD1781479B006731B9;
-			remoteInfo = "jsbindings Mac";
-		};
-		062E5169184C6F4200A8C98B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 062E514A184C6F4100A8C98B /* cocos2d_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1A6FB53017854BC300CDF010;
-			remoteInfo = "luabindings Mac";
-		};
 		062E516B184C6F4200A8C98B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 062E514A184C6F4100A8C98B /* cocos2d_libs.xcodeproj */;
@@ -176,20 +163,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = A07A4FB4178387730073F6A7;
 			remoteInfo = "CocosDenshion iOS";
-		};
-		062E5175184C6F4200A8C98B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 062E514A184C6F4100A8C98B /* cocos2d_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A07A5030178387750073F6A7;
-			remoteInfo = "jsbindings iOS";
-		};
-		062E5177184C6F4200A8C98B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 062E514A184C6F4100A8C98B /* cocos2d_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1A119791178526AA00D62A44;
-			remoteInfo = "luabindings iOS";
 		};
 		062E5179184C6F4B00A8C98B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -279,6 +252,8 @@
 		06551CB4181D316800D872D8 /* CCColorMatrixFunctionalTestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCColorMatrixFunctionalTestScene.h; sourceTree = "<group>"; };
 		06551CC4181D405900D872D8 /* MainMenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainMenuScene.cpp; sourceTree = "<group>"; };
 		06551CC5181D405900D872D8 /* MainMenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuScene.h; sourceTree = "<group>"; };
+		06A945D418C4DB5400FE1B91 /* CCPathRenderingShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCPathRenderingShader.cpp; sourceTree = "<group>"; };
+		06A945D518C4DB5400FE1B91 /* CCPathRenderingShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPathRenderingShader.h; sourceTree = "<group>"; };
 		06EDEC77181A7F7D00633CA9 /* CCSpriteFX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSpriteFX.cpp; sourceTree = "<group>"; };
 		06EDEC78181A7F7D00633CA9 /* CCSpriteFX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSpriteFX.h; sourceTree = "<group>"; };
 		06EDEC7A181A80A700633CA9 /* CCActionColorMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCActionColorMatrix.cpp; sourceTree = "<group>"; };
@@ -529,15 +504,11 @@
 				062E5162184C6F4200A8C98B /* libchipmunk Mac.a */,
 				062E5164184C6F4200A8C98B /* libbox2d Mac.a */,
 				062E5166184C6F4200A8C98B /* libCocosDenshion Mac.a */,
-				062E5168184C6F4200A8C98B /* libjsbindings Mac.a */,
-				062E516A184C6F4200A8C98B /* libluabindings Mac.a */,
 				062E516C184C6F4200A8C98B /* libcocos2dx iOS.a */,
 				062E516E184C6F4200A8C98B /* libcocos2dx-extensions iOS.a */,
 				062E5170184C6F4200A8C98B /* libchipmunk iOS.a */,
 				062E5172184C6F4200A8C98B /* libbox2d iOS.a */,
 				062E5174184C6F4200A8C98B /* libCocosDenshion iOS.a */,
-				062E5176184C6F4200A8C98B /* libjsbindings iOS.a */,
-				062E5178184C6F4200A8C98B /* libluabindings iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -628,6 +599,8 @@
 				0629CA7818A76F000000D642 /* CCPathRenderingPaint.h */,
 				0629CA6618A76EB80000D642 /* CCPathRenderingPath.cpp */,
 				0629CA6718A76EB80000D642 /* CCPathRenderingPath.h */,
+				06A945D418C4DB5400FE1B91 /* CCPathRenderingShader.cpp */,
+				06A945D518C4DB5400FE1B91 /* CCPathRenderingShader.h */,
 				0629CA7A18A783D20000D642 /* glu */,
 				06FD776018A5C90000439B7B /* MonkVG */,
 			);
@@ -975,20 +948,6 @@
 			remoteRef = 062E5165184C6F4200A8C98B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		062E5168184C6F4200A8C98B /* libjsbindings Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libjsbindings Mac.a";
-			remoteRef = 062E5167184C6F4200A8C98B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		062E516A184C6F4200A8C98B /* libluabindings Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libluabindings Mac.a";
-			remoteRef = 062E5169184C6F4200A8C98B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		062E516C184C6F4200A8C98B /* libcocos2dx iOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1022,20 +981,6 @@
 			fileType = archive.ar;
 			path = "libCocosDenshion iOS.a";
 			remoteRef = 062E5173184C6F4200A8C98B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		062E5176184C6F4200A8C98B /* libjsbindings iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libjsbindings iOS.a";
-			remoteRef = 062E5175184C6F4200A8C98B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		062E5178184C6F4200A8C98B /* libluabindings iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libluabindings iOS.a";
-			remoteRef = 062E5177184C6F4200A8C98B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1093,6 +1038,7 @@
 				06551CC6181D405900D872D8 /* MainMenuScene.cpp in Sources */,
 				061090CD181A502F008DB25B /* CCTextureTransformFunctionalTestScene.cpp in Sources */,
 				0629CAA018A783D20000D642 /* dict.c in Sources */,
+				06A945D618C4DB5400FE1B91 /* CCPathRenderingShader.cpp in Sources */,
 				06FD782E18A5C90100439B7B /* OpenGLESString.cpp in Sources */,
 				06551CB5181D316800D872D8 /* CCColorMatrixFunctionalTestScene.cpp in Sources */,
 				06FD787518A5D8C900439B7B /* ccBatch.cpp in Sources */,

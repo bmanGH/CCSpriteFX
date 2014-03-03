@@ -7,6 +7,7 @@
 //
 
 #include "CCGraphicsNode.h"
+#include "CCPathRenderingShader.h"
 
 NS_CC_EXT_BEGIN
 
@@ -15,7 +16,10 @@ bool kCCProfilerCategoryGraphicsNode = false;
 #define CC_GRAPHICS_NODE_DEBUG_DRAW     (0)
 
 GraphicsNode::GraphicsNode ()
-: _blendFunc(BlendFunc::ALPHA_PREMULTIPLIED)
+: _blendFunc(BlendFunc::ALPHA_PREMULTIPLIED),
+_shaderProgramPaintColor(nullptr),
+_shaderProgramPaintGradient(nullptr),
+_colorUniform(-1)
 {
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     auto listener = EventListenerCustom::create(EVENT_COME_TO_FOREGROUND, [this](EventCustom* event){
@@ -30,10 +34,65 @@ GraphicsNode::GraphicsNode ()
 
 GraphicsNode::~GraphicsNode ()
 {
+    CC_SAFE_RELEASE(_shaderProgramPaintColor);
+    CC_SAFE_RELEASE(_shaderProgramPaintGradient);
 }
 
 bool GraphicsNode::init () {
     if (super::init()) {
+        // init shaders
+        GLProgram* glProgram = ShaderCache::getInstance()->getProgram(kCCShader_PathRendering_PositionColor);
+        if (glProgram) {
+            _shaderProgramPaintColor = glProgram;
+            _shaderProgramPaintColor->retain();
+        }
+        else {
+            glProgram = new GLProgram();
+            glProgram->initWithVertexShaderByteArray(ccShader_PathRendering_PositionColor_vert,
+                                                     ccShader_PathRendering_PositionColor_frag);
+            
+            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+            
+            glProgram->link();
+            glProgram->updateUniforms();
+            
+            CHECK_GL_ERROR_DEBUG();
+            
+            ShaderCache::getInstance()->addProgram(glProgram, kCCShader_PathRendering_PositionColor);
+            
+            _shaderProgramPaintColor = glProgram;
+            _shaderProgramPaintColor->retain();
+            
+            glProgram->release();
+        }
+        _colorUniform = glProgram->getUniformLocationForName("u_color");
+        
+        glProgram = ShaderCache::getInstance()->getProgram(kCCShader_PathRendering_PositionTexture);
+        if (glProgram) {
+            _shaderProgramPaintGradient = glProgram;
+            _shaderProgramPaintGradient->retain();
+        }
+        else {
+            glProgram = new GLProgram();
+            glProgram->initWithVertexShaderByteArray(ccShader_PathRendering_PositionTexture_vert,
+                                                     ccShader_PathRendering_PositionTexture_frag);
+            
+            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
+            
+            glProgram->link();
+            glProgram->updateUniforms();
+            
+            CHECK_GL_ERROR_DEBUG();
+            
+            ShaderCache::getInstance()->addProgram(glProgram, kCCShader_PathRendering_PositionTexture);
+            
+            _shaderProgramPaintGradient = glProgram;
+            _shaderProgramPaintGradient->retain();
+            
+            glProgram->release();
+        }
+        
         return true;
     }
     return false;
@@ -58,6 +117,10 @@ void GraphicsNode::setBlendFunc(const BlendFunc &blendFunc) {
     _blendFunc = blendFunc;
 }
 
+void GraphicsNode::setShaderProgram(GLProgram *shaderProgram) {
+    CCAssert(false, "<GraphicsNode> set shader program is invalid");
+}
+
 Rect GraphicsNode::getBoundingBox() const {
     Rect ret;
     for (PathRenderingPath* path : _paths) {
@@ -73,6 +136,7 @@ void GraphicsNode::addPath (PathRenderingPath* path) {
 void GraphicsNode::clear () {
     _paths.clear();
 }
+
 
 #pragma mark - draw
 
@@ -109,11 +173,18 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
     // draw fill
     if (path->_numberFillVertices > 0 && path->_fillPaintForPath) {
         if (path->_fillPaintForPath->getPaintType() == PathRenderingPaint::PAINT_TYPE_COLOR ) {
-            setShaderProgram(ShaderCache::getInstance()->getProgram(GLProgram::SHADER_NAME_POSITION_LENGTH_TEXTURE_COLOR));
-            CC_NODE_DRAW_SETUP();
+            const Color4F paintColor = path->_fillPaintForPath->getPaintColor();
+            
+            _shaderProgramPaintColor->use();
+            _shaderProgramPaintColor->setUniformsForBuiltins(_modelViewTransform);
+            _shaderProgramPaintColor->setUniformLocationWith4f(_colorUniform,
+                                                               paintColor.r,
+                                                               paintColor.g,
+                                                               paintColor.b,
+                                                               paintColor.a);
             
             GL::blendFunc( _blendFunc.src, _blendFunc.dst );
-            GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POS_COLOR_TEX);
+            GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POSITION);
             
             glBindBuffer(GL_ARRAY_BUFFER, path->_fillVBO);
             // vertex
@@ -124,9 +195,6 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
                                   sizeof(PathRenderingPath::v2_t),
                                   0);
             
-//            // color
-//            glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(V2F_C4B_T2F), (GLvoid *)offsetof(V2F_C4B_T2F, colors));
-            
             glDrawArrays(GL_TRIANGLES, 0, path->_numberFillVertices);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
@@ -134,12 +202,12 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
 //        else if (path->_fillPaintForPath->getPaintType() == PathRenderingPaint::PAINT_TYPE_PATTERN) {
 //        }
         else {
-            setShaderProgram(ShaderCache::getInstance()->getProgram(GLProgram::SHADER_NAME_POSITION_LENGTH_TEXTURE_COLOR));
-            CC_NODE_DRAW_SETUP();
+            _shaderProgramPaintGradient->use();
+            _shaderProgramPaintGradient->setUniformsForBuiltins(_modelViewTransform);
             
             GL::blendFunc( _blendFunc.src, _blendFunc.dst );
             GL::bindTexture2D(path->_fillPaintForPath->getGradientImage()->getName());
-            GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POS_COLOR_TEX);
+            GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POSITION | GL::VERTEX_ATTRIB_FLAG_TEX_COORDS);
             
             glBindBuffer(GL_ARRAY_BUFFER, path->_fillVBO);
             // vertex
@@ -149,9 +217,6 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
                                   GL_FALSE,
                                   sizeof(PathRenderingPath::textured_vertex_t),
                                   (GLvoid*)offsetof(PathRenderingPath::textured_vertex_t, v));
-            
-//            // color
-//            glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(V2F_C4B_T2F), (GLvoid *)offsetof(V2F_C4B_T2F, colors));
             
             // texcood
             glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_TEX_COORDS,
@@ -164,19 +229,26 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
             glDrawArrays(GL_TRIANGLES, 0, path->_numberFillVertices);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
+        
+        CHECK_GL_ERROR_DEBUG();
+        CC_INCREMENT_GL_DRAWS(1);
     }
-    
-    CHECK_GL_ERROR_DEBUG();
-    CC_INCREMENT_GL_DRAWS(1);
     
     // draw stroke
     if (path->_numberStrokeVertices > 0 && path->_strokePaintForPath) {
         if (path->_strokePaintForPath->getPaintType() == PathRenderingPaint::PAINT_TYPE_COLOR ) {
-            setShaderProgram(ShaderCache::getInstance()->getProgram(GLProgram::SHADER_NAME_POSITION_LENGTH_TEXTURE_COLOR));
-            CC_NODE_DRAW_SETUP();
+            const Color4F paintColor = path->_strokePaintForPath->getPaintColor();
+            
+            _shaderProgramPaintColor->use();
+            _shaderProgramPaintColor->setUniformsForBuiltins(_modelViewTransform);
+            _shaderProgramPaintColor->setUniformLocationWith4f(_colorUniform,
+                                                               paintColor.r,
+                                                               paintColor.g,
+                                                               paintColor.b,
+                                                               paintColor.a);
             
             GL::blendFunc( _blendFunc.src, _blendFunc.dst );
-            GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POS_COLOR_TEX);
+            GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POSITION);
             
             glBindBuffer(GL_ARRAY_BUFFER, path->_strokeVBO);
             // vertex
@@ -187,9 +259,6 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
                                   sizeof(PathRenderingPath::v2_t),
                                   0);
             
-//            // color
-//            glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(V2F_C4B_T2F), (GLvoid *)offsetof(V2F_C4B_T2F, colors));
-            
             glDrawArrays(GL_TRIANGLE_STRIP, 0, path->_numberStrokeVertices);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
@@ -199,10 +268,10 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
 //        }
 //        else {
 //        }
+        
+        CHECK_GL_ERROR_DEBUG();
+        CC_INCREMENT_GL_DRAWS(1);
     }
-    
-    CHECK_GL_ERROR_DEBUG();
-    CC_INCREMENT_GL_DRAWS(1);
     
 #if CC_GRAPHICS_NODE_DEBUG_DRAW == 2
     // draw path bounding box
