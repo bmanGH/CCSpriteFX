@@ -24,7 +24,7 @@ NS_CC_EXT_BEGIN
 /**
  * @note "coords" means the count of path segment's params, "path command" same as path segment
  */
-class CC_DLL PathRenderingPath : public cocos2d::Object, public cocos2d::Clonable {
+class CC_DLL PathRenderingPath : public cocos2d::Ref {
     
 public:
     enum PathSegment : unsigned int {
@@ -233,9 +233,6 @@ public:
     void setBufferMode ( GLenum t ) {
         _bufferMode = t;
     }
-    
-    // Clonable
-    virtual cocos2d::Clonable* clone () const;
     
 protected:
     // tesseleator callbacks

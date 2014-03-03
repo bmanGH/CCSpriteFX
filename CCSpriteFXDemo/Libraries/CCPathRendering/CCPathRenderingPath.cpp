@@ -1128,14 +1128,6 @@ void PathRenderingPath::fillAndStroke (PathRenderingPaint* fillPaint, PathFillRu
 }
 
 
-#pragma mark - Cloneable
-
-cocos2d::Clonable* PathRenderingPath::clone () const {
-    //TODO
-    return nullptr;
-}
-
-
 #pragma mark - tesseleator callbacks
 
 GLvoid PathRenderingPath::tessBegin( GLenum type, GLvoid* user ) {

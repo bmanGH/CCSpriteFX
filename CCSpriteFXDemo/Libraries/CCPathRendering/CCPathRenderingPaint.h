@@ -18,7 +18,7 @@
 NS_CC_EXT_BEGIN
 
 
-class CC_DLL PathRenderingPaint : public cocos2d::Object, public cocos2d::Clonable {
+class CC_DLL PathRenderingPaint : public cocos2d::Ref {
     
 public:
     enum PaintType {
@@ -53,7 +53,7 @@ protected:
     PaintType               _paintType;
     Color4F                 _paintColor;
     PaintColorRampSpreadMode     _colorRampSpreadMode;
-    bool                    _colorRampPremultiplied;
+//    bool                    _colorRampPremultiplied;
     float					_paintLinearGradient[4];
     float					_paintRadialGradient[5];
     float					_paint2x3Gradient[6];
@@ -78,14 +78,59 @@ public:
     
     void setPaintColor (Color4F v) {
         _paintColor = v;
+        
+        _isDirty = true;
     }
     
-    Texture2D* getGradientImage() {
+    PaintColorRampSpreadMode getColorRampSpreadMode () {
+        return _colorRampSpreadMode;
+    }
+    
+    void setColorRampSpreadMode (PaintColorRampSpreadMode colorRampSpreadMode) {
+        _colorRampSpreadMode = colorRampSpreadMode;
+        
+        _isDirty = true;
+    }
+    
+    float* getLinearGradient () {
+        return _paintLinearGradient;
+    }
+    
+    void setLinearGradient (float v[4]) {
+        for (int i = 0; i < 4; i++) {
+            _paintLinearGradient[i] = v[i];
+        }
+        
+        _isDirty = true;
+    }
+    
+    float* getRadialGradient () {
+        return _paintRadialGradient;
+    }
+    
+    void setRadialGradient (float v[5]) {
+        for (int i = 0; i < 5; i++) {
+            _paintRadialGradient[i] = v[i];
+        }
+        
+        _isDirty = true;
+    }
+    
+    float* get2x3Gradient () {
+        return _paint2x3Gradient;
+    }
+    
+    void set2x3Gradient (float v[6]) {
+        for (int i = 0; i < 6; i++) {
+            _paint2x3Gradient[i] = v[i];
+        }
+        
+        _isDirty = true;
+    }
+    
+    Texture2D* getGradientImage () {
         return _gradientImage;
     }
-    
-    // Clonable
-    virtual cocos2d::Clonable* clone () const;
     
 protected:
     void buildGradientImage (float pathWidth, float pathHeight);

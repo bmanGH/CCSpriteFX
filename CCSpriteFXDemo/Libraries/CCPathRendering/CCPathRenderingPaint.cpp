@@ -25,19 +25,14 @@ PathRenderingPaint::~PathRenderingPaint ()
 }
 
 
-#pragma mark - Clonable
-
-cocos2d::Clonable* PathRenderingPaint::clone () const {
-    //TODO
-    return nullptr;
-}
-
-
 #pragma mark - internal
 
 void PathRenderingPaint::buildGradientImage (float pathWidth, float pathHeight) {
     if (!_isDirty)
         return;
+    
+    if (_gradientImage)
+        CC_SAFE_RELEASE_NULL(_gradientImage);
     
     if ( getPaintType() == PAINT_TYPE_LINEAR_GRADIENT ) {
         this->buildLinearGradientImage(pathWidth, pathHeight);
