@@ -194,8 +194,11 @@ void SpriteFX::setTexture(Texture2D *texture) {
     }
 }
 
-void SpriteFX::draw () {
-    if (this->isInsideBounds()) {
+void SpriteFX::draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) {
+    // Don't do calculate the culling if the transform was not updated
+    _insideBounds = transformUpdated ? this->isInsideBounds() : _insideBounds;
+    
+    if (_insideBounds) {
         _customRenderCommand.init(_globalZOrder);
         _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
         Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
@@ -288,12 +291,12 @@ void SpriteFX::updateShader () {
         GLProgram* glProgram = ShaderCache::getInstance()->getProgram(kCCShader_PositionTextureColorColorMatrixPremultipliedAlpha);
         if (glProgram == nullptr) {
             glProgram = new GLProgram();
-            glProgram->initWithVertexShaderByteArray(ccShader_PositionTextureColorTextureTransform_vert,
-                                                     ccShader_PositionTextureColorColorMatrixPremultipliedAlpha_frag);
+            glProgram->initWithByteArrays(ccShader_PositionTextureColorTextureTransform_vert,
+                                          ccShader_PositionTextureColorColorMatrixPremultipliedAlpha_frag);
             
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR);
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
             
             glProgram->link();
             glProgram->updateUniforms();
@@ -316,12 +319,12 @@ void SpriteFX::updateShader () {
         GLProgram* glProgram = ShaderCache::getInstance()->getProgram(kCCShader_PositionTextureColorColorMatrix);
         if (glProgram == nullptr) {
             glProgram = new GLProgram();
-            glProgram->initWithVertexShaderByteArray(ccShader_PositionTextureColorTextureTransform_vert,
-                                                     ccShader_PositionTextureColorColorMatrix_frag);
+            glProgram->initWithByteArrays(ccShader_PositionTextureColorTextureTransform_vert,
+                                          ccShader_PositionTextureColorColorMatrix_frag);
             
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR);
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
             
             glProgram->link();
             glProgram->updateUniforms();

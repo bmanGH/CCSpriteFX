@@ -265,7 +265,7 @@ void CCColorMatrixFunctionalTestScene::update (float delta) {
 
 #pragma mark - Draw
 
-void CCColorMatrixFunctionalTestScene::draw () {
+void CCColorMatrixFunctionalTestScene::draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) {
     _customRenderCommand.init(_globalZOrder);
     _customRenderCommand.func = CC_CALLBACK_0(CCColorMatrixFunctionalTestScene::render, this);
     Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);

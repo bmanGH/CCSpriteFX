@@ -37,13 +37,13 @@ bool MainMenuScene::init() {
     Size winSize = Director::getInstance()->getWinSize();
     
     auto menuLabel1 = LabelTTF::create("ColorMatrix", "Arial", 24);
-    auto menuItem1 = MenuItemLabel::create(menuLabel1, [] (Object*) {
+    auto menuItem1 = MenuItemLabel::create(menuLabel1, [] (Ref*) {
         auto scene = CCColorMatrixFunctionalTestScene::scene();
         Director::getInstance()->replaceScene(scene);
     });
     
     auto menuLabel2 = LabelTTF::create("TextureTransform", "Arial", 24);
-    auto menuItem2 = MenuItemLabel::create(menuLabel2, [] (Object*) {
+    auto menuItem2 = MenuItemLabel::create(menuLabel2, [] (Ref*) {
         auto scene = CCTextureTransformFunctionalTestScene::scene();
         Director::getInstance()->replaceScene(scene);
     });

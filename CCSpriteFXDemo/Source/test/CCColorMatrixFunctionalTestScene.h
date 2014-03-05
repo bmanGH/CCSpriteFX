@@ -59,7 +59,7 @@ public:
     virtual void update (float delta) override;
     
     // draw
-    virtual void draw () override;
+    virtual void draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) override;
     void render ();
     
     // touch callback

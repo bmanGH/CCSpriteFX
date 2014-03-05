@@ -122,7 +122,7 @@ void CCTextureTransformFunctionalTestScene::update (float delta) {
 
 #pragma mark - Draw
 
-void CCTextureTransformFunctionalTestScene::draw () {
+void CCTextureTransformFunctionalTestScene::draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) {
     
 }
 

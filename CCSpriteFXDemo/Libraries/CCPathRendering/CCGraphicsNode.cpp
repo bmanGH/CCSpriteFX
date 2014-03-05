@@ -20,6 +20,7 @@ GraphicsNode::GraphicsNode ()
 _shaderProgramPaintColor(nullptr),
 _shaderProgramPaintGradient(nullptr),
 _colorUniform(-1)
+//_insideBounds(true)
 {
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     auto listener = EventListenerCustom::create(EVENT_COME_TO_FOREGROUND, [this](EventCustom* event){
@@ -48,10 +49,10 @@ bool GraphicsNode::init () {
         }
         else {
             glProgram = new GLProgram();
-            glProgram->initWithVertexShaderByteArray(ccShader_PathRendering_PositionColor_vert,
+            glProgram->initWithByteArrays(ccShader_PathRendering_PositionColor_vert,
                                                      ccShader_PathRendering_PositionColor_frag);
             
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
             
             glProgram->link();
             glProgram->updateUniforms();
@@ -74,11 +75,11 @@ bool GraphicsNode::init () {
         }
         else {
             glProgram = new GLProgram();
-            glProgram->initWithVertexShaderByteArray(ccShader_PathRendering_PositionTexture_vert,
+            glProgram->initWithByteArrays(ccShader_PathRendering_PositionTexture_vert,
                                                      ccShader_PathRendering_PositionTexture_frag);
             
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
-            glProgram->addAttribute(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+            glProgram->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORDS);
             
             glProgram->link();
             glProgram->updateUniforms();
@@ -129,21 +130,35 @@ Rect GraphicsNode::getBoundingBox() const {
     return ret;
 }
 
-void GraphicsNode::addPath (PathRenderingPath* path) {
+bool GraphicsNode::addPath (PathRenderingPath* path) {
+    if (!path->isStyled())
+        return false;
+    
     _paths.pushBack(path);
+    
+    //TODO: calculate content size
+    
+    return true;
 }
 
 void GraphicsNode::clear () {
     _paths.clear();
+    
+    //TODO: calculate content size
 }
 
 
 #pragma mark - draw
 
-void GraphicsNode::draw () {
-    _customRenderCommand.init(_globalZOrder);
-    _customRenderCommand.func = CC_CALLBACK_0(GraphicsNode::render, this);
-    Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
+void GraphicsNode::draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) {
+//    // Don't do calculate the culling if the transform was not updated
+//    _insideBounds = transformUpdated ? this->isInsideBounds() : _insideBounds;
+//    
+//    if (_insideBounds) {
+        _customRenderCommand.init(_globalZOrder);
+        _customRenderCommand.func = CC_CALLBACK_0(GraphicsNode::render, this);
+        Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
+//    }
 }
 
 void GraphicsNode::render () {
@@ -285,6 +300,35 @@ void GraphicsNode::drawPath (PathRenderingPath* path) {
     DrawPrimitives::drawPoly(vertices, 4, true);
 #endif
 }
+
+//// Culling function from cocos2d-iphone CCSprite.m file
+//bool GraphicsNode::isInsideBounds() const
+//{
+//    // half size of the screen
+//    Size screen_half = Director::getInstance()->getWinSize();
+//    screen_half.width /= 2;
+//    screen_half.height /= 2;
+//    
+//    float hcsx = _contentSize.width / 2;
+//    float hcsy = _contentSize.height / 2;
+//    
+//    // convert to world coordinates
+//    float x = hcsx * _modelViewTransform.mat[0] + hcsy * _modelViewTransform.mat[4] + _modelViewTransform.mat[12];
+//    float y = hcsx * _modelViewTransform.mat[1] + hcsy * _modelViewTransform.mat[5] + _modelViewTransform.mat[13];
+//    
+//    // center of screen is (0,0)
+//    x -= screen_half.width;
+//    y -= screen_half.height;
+//    
+//    // convert content size to world coordinates
+//    float wchw = hcsx * std::max(fabsf(_modelViewTransform.mat[0] + _modelViewTransform.mat[4]), fabsf(_modelViewTransform.mat[0] - _modelViewTransform.mat[4]));
+//    float wchh = hcsy * std::max(fabsf(_modelViewTransform.mat[1] + _modelViewTransform.mat[5]), fabsf(_modelViewTransform.mat[1] - _modelViewTransform.mat[5]));
+//    
+//    // compare if it in the positive quadrant of the screen
+//    float tmpx = (fabsf(x)-wchw);
+//    float tmpy = (fabsf(y)-wchh);
+//    return (tmpx < screen_half.width && tmpy < screen_half.height);
+//}
 
 
 NS_CC_EXT_END

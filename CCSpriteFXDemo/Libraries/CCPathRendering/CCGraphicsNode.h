@@ -32,11 +32,14 @@ protected:
     GLint _colorUniform;
     BlendFunc _blendFunc;
     CustomCommand _customRenderCommand;
+//    bool _insideBounds;                     // whether or not the sprite was inside bounds the previous frame
     
 protected:
     GraphicsNode ();
     virtual ~GraphicsNode ();
     virtual bool init ();
+    
+//    bool isInsideBounds() const;
     
 public:
     static GraphicsNode* create ();
@@ -49,11 +52,11 @@ public:
     virtual void setShaderProgram(GLProgram *shaderProgram) override;
     
     virtual Rect getBoundingBox() const override;
-    void addPath (PathRenderingPath* path);
+    bool addPath (PathRenderingPath* path); // return 'false' if path is NOT stypled, and will not add this path
     void clear ();
     
     // draw
-    virtual void draw () override;
+    virtual void draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) override;
     void render ();
     void drawPath (PathRenderingPath* path);
     
