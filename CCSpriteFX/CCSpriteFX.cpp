@@ -183,11 +183,11 @@ void SpriteFX::setTextureWrapClampToEdge () {
 #pragma mark - Override
 
 void SpriteFX::setTexture(const std::string& fileName) {
-    this->setTexture(fileName);
+    super::setTexture(fileName);
 }
 
 void SpriteFX::setTexture(Texture2D *texture) {
-    Sprite::setTexture(texture);
+    super::setTexture(texture);
     
     if (_texture) {
         this->updateShader();

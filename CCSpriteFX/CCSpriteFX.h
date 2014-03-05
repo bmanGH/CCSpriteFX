@@ -94,6 +94,7 @@ public:
     virtual void setTexSkewY (float value) override;
     
 private:
+    typedef cocos2d::Sprite super;
     CC_DISALLOW_COPY_AND_ASSIGN(SpriteFX);
     
 };
