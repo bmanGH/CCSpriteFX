@@ -61,7 +61,7 @@ public:
     void setTextureWrapClampToEdge ();
     
     // render
-    virtual void setTexture(const std::string& fileName) override;
+    using cocos2d::Sprite::setTexture;
     virtual void setTexture(Texture2D *texture) override;
     virtual void draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) override;
     void render ();
