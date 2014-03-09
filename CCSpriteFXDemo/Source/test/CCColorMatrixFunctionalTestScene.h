@@ -6,15 +6,6 @@
 #include "CCSpriteFX.h"
 #include "CCActionColorMatrix.h"
 
-
-#include "MonkVG/openvg.h"
-#include "MonkVG/vgu.h"
-#include "MonkVG/vgext.h"
-
-#include "CCPathRendering/CCGraphicsNode.h"
-#include "CCPathRendering/CCPathRenderingPaint.h"
-#include "CCPathRendering/CCPathRenderingPath.h"
-
 USING_NS_CC;
 USING_NS_CC_EXT;
 
@@ -32,20 +23,6 @@ private:
     SpriteFX* spr9;
     
     CustomCommand _customRenderCommand;
-    
-    VGPath	_path;
-	VGPaint _paint;
-	VGPaint _linearGradientPaint;
-	VGPaint _radialGradientPaint;
-//	VGImage _image;
-//	VGImage	_bitmapFont;
-	//	VGImage _gradientImage;
-	VGPath _linearGradientPath;
-	VGPath _radialGradientPath;
-	VGFont	_font;
-	VGfloat _lineHeight;
-    
-    GraphicsNode* _graphicsNode;
     
 public:
     static Scene* scene();
