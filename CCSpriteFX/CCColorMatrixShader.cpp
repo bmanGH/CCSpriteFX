@@ -14,6 +14,10 @@ NS_CC_EXT_BEGIN
 #define STRINGIZE(x) #x
 #define SHADER_STRING(x) STRINGIZE(x)
 
+#ifdef GL_ES_VERSION_2_0
+#define GL_ES
+#endif
+
 const GLchar* ccShader_PositionTextureColorColorMatrixPremultipliedAlpha_frag = SHADER_STRING
 (
 #ifdef GL_ES
