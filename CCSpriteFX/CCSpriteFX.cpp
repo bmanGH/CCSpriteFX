@@ -197,7 +197,7 @@ void SpriteFX::draw (Renderer* renderer, const kmMat4 &transform, bool transform
     if (_insideBounds) {
         _customRenderCommand.init(_globalZOrder);
         _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
-        Director::getInstance()->getRenderer()->addCommand(&_customRenderCommand);
+        renderer->addCommand(&_customRenderCommand);
     }
 }
 
@@ -223,7 +223,7 @@ void SpriteFX::render () {
     GL::bindTexture2D( _texture->getName() );
     GL::enableVertexAttribs( GL::VERTEX_ATTRIB_FLAG_POS_COLOR_TEX );
     
-#define kQuadSize sizeof(_quad.bl)
+#define kQuadSize sizeof(V3F_C4B_T2F)
 #ifdef EMSCRIPTEN
     long offset = 0;
     setGLBufferData(&_quad, 4 * kQuadSize, 0);
@@ -251,6 +251,10 @@ void SpriteFX::render () {
     
     CHECK_GL_ERROR_DEBUG();
     
+    CC_INCREMENT_GL_DRAWS(1);
+    
+    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySpriteColorMatrix, "SpriteFX - draw");
+    
 #if CC_SPRITE_DEBUG_DRAW == 1
     // draw bounding box
     Point vertices[4] = {
@@ -270,10 +274,6 @@ void SpriteFX::render () {
     };
     DrawPrimitives::drawPoly(vertices, 4, true);
 #endif // CC_SPRITE_DEBUG_DRAW
-    
-    CC_INCREMENT_GL_DRAWS(1);
-    
-    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySpriteColorMatrix, "SpriteFX - draw");
     
     if (_needResetColorMatrix)
         _colorMatrix = CCColorMatrixMakeIdentity();
