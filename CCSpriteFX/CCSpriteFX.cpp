@@ -192,8 +192,8 @@ void SpriteFX::setTexture(Texture2D *texture) {
 
 void SpriteFX::draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) {
     // Don't do calculate the culling if the transform was not updated
-    _insideBounds = transformUpdated ? this->isInsideBounds() : _insideBounds;
-    
+    _insideBounds = transformUpdated ? renderer->checkVisibility(transform, _contentSize) : _insideBounds;
+
     if (_insideBounds) {
         _customRenderCommand.init(_globalZOrder);
         _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
