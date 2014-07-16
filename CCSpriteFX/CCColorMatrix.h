@@ -10,9 +10,8 @@
 #define __CCColorMatrix__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 // color component luminance
@@ -44,6 +43,6 @@ CC_DLL ColorMatrix4x4 CCColorMatrixConcat (const ColorMatrix4x4* M1, const Color
 CC_DLL void printCCColorMatrix (const ColorMatrix4x4* M);
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__CCColorMatrix__) */

@@ -10,12 +10,11 @@
 #define __CCSpriteFX__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
 
 #include "CCColorMatrixProtocol.h"
 #include "CCTextureTransformProtocol.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 extern bool kCCProfilerCategorySpriteFX;
@@ -100,6 +99,6 @@ private:
 };
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__CCTextureTransform__CCSpriteFX__) */

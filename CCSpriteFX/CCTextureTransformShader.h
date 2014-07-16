@@ -10,15 +10,14 @@
 #define __CCTextureTransformShader__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 #define kCCShader_PositionTextureColorTextureTransform "ShaderPositionTextureColorTextureTransform"
 extern CC_DLL const GLchar* ccShader_PositionTextureColorTextureTransform_vert;
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__CCTextureTransform__CCTextureTransformShader__) */

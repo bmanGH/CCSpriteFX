@@ -9,9 +9,7 @@
 #ifndef __CCTextureTransformProtocol__
 #define __CCTextureTransformProtocol__
 
-#include "cocos-ext.h"
-
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 class CC_DLL TextureTransformProtocol {
@@ -49,6 +47,6 @@ public:
 };
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__CCTextureTransform__CCTextureTransformProtocol__) */

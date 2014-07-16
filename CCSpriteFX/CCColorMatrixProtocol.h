@@ -9,10 +9,9 @@
 #ifndef _ColorMatrixProtocol_h
 #define _ColorMatrixProtocol_h
 
-#include "cocos-ext.h"
 #include "CCColorMatrix.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 class CC_DLL ColorMatrixProtocol {
@@ -30,6 +29,6 @@ public:
 };
 
 
-NS_CC_EXT_END
+}}
 
 #endif

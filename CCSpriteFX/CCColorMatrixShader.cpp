@@ -8,7 +8,7 @@
 
 #include "CCColorMatrixShader.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 #define STRINGIZE(x) #x
@@ -70,4 +70,4 @@ void main()
 }
 );
 
-NS_CC_EXT_END
+}}

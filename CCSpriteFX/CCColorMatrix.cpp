@@ -9,7 +9,7 @@
 #include "CCColorMatrix.h"
 #include "math.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 ColorMatrix4x4 CCColorMatrixMakeIdentity () {
@@ -151,4 +151,4 @@ void printCCColorMatrix (ColorMatrix4x4* M) {
 }
 
 
-NS_CC_EXT_END
+}}

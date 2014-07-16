@@ -11,7 +11,7 @@
 #include "CCTextureTransformShader.h"
 #include <math.h>
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 bool kCCProfilerCategorySpriteFX = false;
@@ -193,8 +193,9 @@ void SpriteFX::setTexture(Texture2D *texture) {
 void SpriteFX::draw (Renderer* renderer, const kmMat4 &transform, bool transformUpdated) {
     // Don't do calculate the culling if the transform was not updated
     _insideBounds = transformUpdated ? renderer->checkVisibility(transform, _contentSize) : _insideBounds;
-
-    if (_insideBounds) {
+    
+    if (_insideBounds)
+    {
         _customRenderCommand.init(_globalZOrder);
         _customRenderCommand.func = CC_CALLBACK_0(SpriteFX::render, this);
         renderer->addCommand(&_customRenderCommand);
@@ -511,4 +512,4 @@ void SpriteFX::setTexSkewY (float value) {
 }
 
 
-NS_CC_EXT_END
+}}

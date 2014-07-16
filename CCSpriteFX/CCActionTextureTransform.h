@@ -10,9 +10,8 @@
 #define __CCActionTextureTransform__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 /**
@@ -271,6 +270,6 @@ public:
 };
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__CCTextureTransform__CCActionTextureTransform__) */

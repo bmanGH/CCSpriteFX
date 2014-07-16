@@ -14,7 +14,7 @@
 
 USING_NS_CC;
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 // base color matrix action
@@ -287,6 +287,6 @@ public:
 };
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__SZSG__CCActionColorMatrix__) */

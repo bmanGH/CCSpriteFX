@@ -9,7 +9,7 @@
 #include "CCActionColorMatrix.h"
 #include "CCColorMatrixProtocol.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 #pragma mark - ColorMatrixActionInterval
@@ -529,4 +529,4 @@ ColorMatrixSetNeedResetColorMatrix* ColorMatrixSetNeedResetColorMatrix::reverse(
 }
 
 
-NS_CC_EXT_END
+}}

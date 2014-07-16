@@ -9,7 +9,7 @@
 #include "CCActionTextureTransform.h"
 #include "CCTextureTransformProtocol.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 #pragma mark - TexAnchorMoveBy
@@ -557,4 +557,4 @@ TexSkewTo* TexSkewTo::reverse() const {
 }
 
 
-NS_CC_EXT_END
+}}

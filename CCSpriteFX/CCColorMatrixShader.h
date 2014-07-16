@@ -10,9 +10,8 @@
 #define __ColorMatrixShader__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
 
-NS_CC_EXT_BEGIN
+namespace cocos2d { namespace extension {
 
 
 #define kCCShader_PositionTextureColorColorMatrixPremultipliedAlpha "ShaderPositionTextureColorColorMatrixPremultipliedAlpha"
@@ -22,6 +21,6 @@ extern CC_DLL const GLchar* ccShader_PositionTextureColorColorMatrixPremultiplie
 extern CC_DLL const GLchar* ccShader_PositionTextureColorColorMatrix_frag;
 
 
-NS_CC_EXT_END
+}}
 
 #endif /* defined(__ColorMatrixShader__) */
